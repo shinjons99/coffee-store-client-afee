@@ -1,10 +1,11 @@
 import { useLoaderData } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 const UpdateCoffee = () => {
     const coffee = useLoaderData();
     const { _id, name, quantity, supplier, taste, category, details, photo } = coffee;
-    const handleAddCoffee = event=>{
+    const handleUpdateCoffee = event=>{
         event.preventDefault();
         const form = event.target;
         const name = form.name.value;
@@ -15,23 +16,23 @@ const UpdateCoffee = () => {
         const details = form.details.value;
         const photo = form.photo.value;
 
-        const newCoffee={name, quantity, supplier, taste, category, details, photo}
-        console.log(newCoffee);
+        const updatedCoffee={name, quantity, supplier, taste, category, details, photo}
+        console.log(updatedCoffee);
         //* send data to the server
-        fetch('http://localhost:5000/coffee', {
-            method: 'POST',
+        fetch(`http://localhost:5000/coffee/${_id}`, {
+            method: 'PUT',
             headers:{
                 'content-type': 'application/json'
             },
-            body: JSON.stringify(newCoffee)
+            body: JSON.stringify(updatedCoffee)
         })
         .then(res=>res.json())
         .then(data=>{
             console.log(data);
-            if(data.insertedId){
+            if(data.modifiedCount>0){
                 Swal.fire({
                     title: 'Success!',
-                    text: 'User Added Successfully',
+                    text: 'Coffee Updated Successfully',
                     icon: 'success',
                     confirmButtonText: 'Cool'
                   })
@@ -45,7 +46,7 @@ const UpdateCoffee = () => {
     return (
         <div className="bg-[#F4F3F0] p-24">
         <h2 className="text-3xl font-extrabold">Update Coffee: {name}</h2>
-        <form onSubmit={handleAddCoffee}>
+        <form onSubmit={handleUpdateCoffee}>
           {/* form name and quantity row  */}
           <div className="md:flex mb-8">
             <div className="form-control md:w-1/2">
@@ -54,7 +55,7 @@ const UpdateCoffee = () => {
               </label>
               <label className="input-group">
                 <input
-                  type="text" name="name"
+                  type="text" name="name" defaultValue={name}
                   placeholder="Coffee Name"
                   className="input input-bordered w-full"
                 />
@@ -66,7 +67,7 @@ const UpdateCoffee = () => {
               </label>
               <label className="input-group">
                 <input
-                  type="text" name="quantity"
+                  type="text" name="quantity" defaultValue={quantity}
                   placeholder="Available Quantity"
                   className="input input-bordered w-full"
                 />
@@ -81,7 +82,7 @@ const UpdateCoffee = () => {
               </label>
               <label className="input-group">
                 <input
-                  type="text" name="supplier"
+                  type="text" name="supplier" defaultValue={supplier}
                   placeholder="supplier Name"
                   className="input input-bordered w-full"
                 />
@@ -93,7 +94,7 @@ const UpdateCoffee = () => {
               </label>
               <label className="input-group">
                 <input
-                  type="text" name="taste"
+                  type="text" name="taste" defaultValue={taste}
                   placeholder="Taste"
                   className="input input-bordered w-full"
                 />
@@ -108,7 +109,7 @@ const UpdateCoffee = () => {
               </label>
               <label className="input-group">
                 <input
-                  type="text" name="category"
+                  type="text" name="category" defaultValue={category}
                   placeholder="Category Name"
                   className="input input-bordered w-full"
                 />
@@ -120,7 +121,7 @@ const UpdateCoffee = () => {
               </label>
               <label className="input-group">
                 <input
-                  type="text" name="details"
+                  type="text" name="details" defaultValue={details}
                   placeholder="Details"
                   className="input input-bordered w-full"
                 />
@@ -135,14 +136,14 @@ const UpdateCoffee = () => {
               </label>
               <label className="input-group">
                 <input
-                  type="text" name="photo"
+                  type="text" name="photo" defaultValue={photo}
                   placeholder="Photo URL"
                   className="input input-bordered w-full"
                 />
               </label>
             </div>
           </div>
-          <input type="submit" value="Add Coffee" className="btn btn-block bg-[#D2B48C] text-[#331A15] hover:text-white" />
+          <input type="submit" value="Update Coffee" className="btn btn-block bg-[#D2B48C] text-[#331A15] hover:text-white" />
         </form>
       </div>
     );
